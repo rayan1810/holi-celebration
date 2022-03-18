@@ -2,11 +2,6 @@ import React from "react";
 import { Animated, Easing } from "react-native";
 import {
   Center,
-  useColorMode,
-  Tooltip,
-  IconButton,
-  SunIcon,
-  MoonIcon,
   Image,
   HStack,
   Text,
@@ -20,6 +15,7 @@ import {
   Circle,
   VStack,
 } from "native-base";
+import NextLink from "next/link";
 
 // Start editing here, save and see your changes.
 export default function App() {
@@ -27,12 +23,32 @@ export default function App() {
   const [showModal, setShowModal] = React.useState(false);
   const [luckyColor, setLuckyColor] = React.useState("");
   let rotateValueHolder = new Animated.Value(0);
+  const getColorMessage = (color) => {
+    switch (color) {
+      case "info":
+        return "It conveys integrity and deep sincerity. It reflects great devotion, wisdom and justice along with fairness and impartiality.";
+      case "green":
+        return "It symbolizes life, fertility, renewal, and resurrection.";
+      case "blue":
+        return "It calls to mind feelings of calmness or serenity. It is often described as peaceful, tranquil, secure, and orderly.";
+      case "yellow":
+        return "It symbolizes happiness and good health. The color is also known to depict knowledge, learning, and peace and joy.";
+      case "orange":
+        return "It is associated with joy, sunshine, and the tropics, and represents enthusiasm, fascination, happiness, creativity, and determination.";
+      case "pink":
+        return "It is associated with love, kindness, and femininity.";
+      case "violet":
+        return "It symbolizes innocence, everlasting love, modesty, spiritual wisdom, faithfulness, mysticism, and remembrance.";
+      case "rose":
+        return "It symbolizes gratitude, grace, and joy.";
+      default:
+        return "You are lucky";
+    }
+  };
   const getRandomNumber = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
   const startImageRotateFunction = () => {
-    console.log(rotationDeg);
-    // setRotationDeg(getRandomNumber(400, 1600).toString());
     rotateValueHolder.setValue(0);
     Animated.timing(rotateValueHolder, {
       toValue: 1,
@@ -66,22 +82,10 @@ export default function App() {
       isInitialMount.current = false;
     } else {
       startImageRotateFunction();
-      console.log(Math.floor((rotationDeg % 360) / 45));
-      console.log(colorPalette[Math.floor((rotationDeg % 360) / 45)]);
     }
   }, [rotationDeg]);
   return (
-    <Center flex={1} bg="muted.900" position="relative">
-      {/* <AspectRatio h="100%" w="100%"> */}
-      {/* <Image
-        h="100%"
-        w="100%"
-        resizeMode="cover"
-        source={{
-          uri: "https://images.unsplash.com/photo-1478088702756-f16754aaf0c4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        }}
-      /> */}
-      {/* </AspectRatio> */}
+    <Center flex={1} bg="muted.900" overflow="hidden" position="relative">
       <Box
         position="absolute"
         bottom="0"
@@ -95,18 +99,28 @@ export default function App() {
         zIndex={-1}
       >
         <ZStack justifyContent="center" alignItems="center">
-          <Circle bg="#120E0E" size="1200px" />
-          <Circle bg="black" size="600px" />
+          <Circle bg="#120E0E" size={{ base: "700px", md: "1200px" }} />
+          <Circle bg="black" size={{ base: "550px", md: "800px" }} />
         </ZStack>
       </Box>
       <VStack space="8" alignItems="center">
-        <Heading fontSize="40px" color="warmGray.100">
+        <Heading
+          fontSize={{ base: "2xl", md: "3xl" }}
+          textAlign="center"
+          color="warmGray.100"
+        >
           FIND YOUR COLOR FOR THIS HOLI
         </Heading>
-        <ZStack justifyContent="center" alignItems="center" size="500">
+        <ZStack
+          // bg="red.300"
+          w="100%"
+          justifyContent="center"
+          alignItems="center"
+          h={["400", "500"]}
+        >
           <Box>
             <Animated.View style={{ transform: [{ rotate: rotateData }] }}>
-              <AspectRatio ratio={1} w="650">
+              <AspectRatio ratio={1} w={{ base: "400", md: "650" }}>
                 <Image
                   resizeMode="cover"
                   source={{
@@ -116,7 +130,11 @@ export default function App() {
               </AspectRatio>
             </Animated.View>
           </Box>
-          <AspectRatio ratio={1} w="150" mt="-8">
+          <AspectRatio
+            ratio={1}
+            w={{ base: "100", md: "150" }}
+            mt={["-8", "-8"]}
+          >
             <Image
               resizeMode="contain"
               source={{
@@ -139,27 +157,21 @@ export default function App() {
         </Button>
       </VStack>
       <Modal isOpen={showModal} onClose={setShowModal}>
-        <Modal.Content>
+        <Modal.Content bg="muted.900">
           <Modal.CloseButton />
-          {/* <Modal.Header>Your Color for this Holi is </Modal.Header> */}
-          <Modal.Body bg="muted.900" px="8" py="6">
-            <Text color="warmGray.100" fontSize="lg" mr="6">
-              Yay! Your Color for this Holi is...
+          <Modal.Body alignItems="center" px="8" py="6">
+            <Box rounded={16} bg={`${luckyColor}.500`} size="32"></Box>
+            <Heading my="3" color="muted.100">
+              {luckyColor.charAt(0).toUpperCase() + luckyColor.slice(1)} !!!!!
+            </Heading>
+            <Text mb="4" textAlign="center" fontSize="md" color="muted.100">
+              {getColorMessage(luckyColor)}
             </Text>
-            <HStack
-              my="8"
-              space="8"
-              alignItems={"center"}
-              justifyContent="center"
-            >
-              <Box rounded={16} bg={`${luckyColor}.500`} size="20"></Box>
-              <Heading color="muted.100">
-                {luckyColor.charAt(0).toUpperCase() + luckyColor.slice(1)} 🎉
-              </Heading>
-            </HStack>
-            <Text color="muted.100">
-              Checkout what we have for you as a Gift <Link>here</Link>
-            </Text>
+            <NextLink href={`/template/${luckyColor}`} passHref>
+              <Button px="8" colorScheme={luckyColor}>
+                Claim Gift
+              </Button>
+            </NextLink>{" "}
           </Modal.Body>
         </Modal.Content>
       </Modal>
