@@ -1,8 +1,9 @@
 import React from "react";
 import { Animated, Easing } from "react-native";
+import Image from "next/image";
 import {
   Center,
-  Image,
+  // Image,
   HStack,
   Text,
   Heading,
@@ -120,28 +121,26 @@ export default function App() {
         >
           <Box>
             <Animated.View style={{ transform: [{ rotate: rotateData }] }}>
-              <AspectRatio ratio={1} w={{ base: "400", md: "650" }}>
+              <Box size={{ base: "400", md: "650" }}>
                 <Image
+                  // width="650px"
+                  // height="650px"
+                  layout="fill"
                   resizeMode="cover"
-                  source={{
-                    uri: "/images/SpinnerBoard.png",
-                  }}
+                  src="/images/SpinnerBoard.png"
                 />
-              </AspectRatio>
+              </Box>
             </Animated.View>
           </Box>
-          <AspectRatio
-            ratio={1}
-            w={{ base: "100", md: "150" }}
-            mt={["-8", "-8"]}
-          >
+          <Box size={{ base: "100", md: "150" }} mt={["-8", "-8"]}>
             <Image
-              resizeMode="contain"
-              source={{
-                uri: "/images/SpinTop.png",
-              }}
+              // width="120px"
+              // height="150px"
+              layout="fill"
+              src="/images/SpinTop.png"
+              objectFit="contain"
             />
-          </AspectRatio>
+          </Box>
         </ZStack>
         <Button
           onPress={() => {
